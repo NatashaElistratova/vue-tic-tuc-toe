@@ -1,5 +1,10 @@
 <template>
     <div class="field-wrap">
+        <div class="row row_score">
+            <div class="column">{{scoreo}}</div>
+            <div class="column">score</div>
+            <div class="column">{{scorex}}</div>
+        </div>
         <div class="column column_text-right">
             <div class="marker circle_custom"
                  :class="{'border_white': activeMarker==='o'}">O
@@ -62,13 +67,15 @@
                 moves: [],
                 activeCell: null,
                 isWinner: null,
-                winningCombination: null,
+                winningCombination: [],
                 modal: false,
                 message: '',
                 startGame: false,
                 restartGame: false,
                 startButton: true,
                 buttonText: 'start game',
+                scoreo: 0,
+                scorex: 0,
             }
         },
         computed: {
@@ -86,7 +93,7 @@
         methods: {
             onStartGame() {
                 this.moves = [];
-                this.winningCombination = null;
+                this.winningCombination = [];
                 this.isWinner = false;
                 //fill center cell by cross
                 this.moves.length = this.cells;
@@ -129,11 +136,13 @@
                     }
                 });
 
-                if (this.winningCombination && this.winningCombination.length > 0) {
+                if (this.isWinner) {
                     this.isWinner = true;
                     this.message = `${marker} wins!`;
                     this.modal = true;
                     this.startGame = false;
+                    this[`score${marker}`]++;
+                    localStorage.setItem(`score${marker}`, this[`score${marker}`]);
                 }
             },
             closeModal() {
@@ -143,7 +152,8 @@
             }
         },
         created() {
-
+            this.scorex = localStorage.getItem('scorex') || 0;
+            this.scoreo = localStorage.getItem('scoreo') || 0;
         }
     }
 </script>
@@ -241,5 +251,10 @@
         font-weight: 700;
         text-transform: uppercase;
         cursor: pointer;
+    }
+
+    .row_score {
+        color: #fff;
+        text-transform: uppercase;
     }
 </style>
