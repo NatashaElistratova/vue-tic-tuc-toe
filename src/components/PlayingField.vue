@@ -13,6 +13,15 @@
         <div class="column">
             <div class="field">
                 <div class="grid">
+                    <svg viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg"
+                         class="cross-line"
+                         v-if="isWinner">
+                          <line :x1="crossLine.x1"
+                                :y1="crossLine.y1"
+                                :x2="crossLine.x2"
+                                :y2="crossLine.y2"
+                                stroke="red" />
+                    </svg>
                     <div class="grid__item"
                          :class="{'border_white': activeCell===i}"
                          v-for="(item, i) in cells"
@@ -76,6 +85,12 @@
                 buttonText: 'start game',
                 scoreo: 0,
                 scorex: 0,
+                crossLine: {
+                    x1: 0,
+                    y1: 0,
+                    x2: 0,
+                    y2: 0
+                }
             }
         },
         computed: {
@@ -138,6 +153,7 @@
 
                 if (this.isWinner) {
                     this.isWinner = true;
+                    this.drawCrossLine();
                     this.message = `${marker} wins!`;
                     this.modal = true;
                     this.startGame = false;
@@ -149,6 +165,18 @@
                 this.modal = false;
                 this.buttonText = 'restart game';
                 this.startButton = true;
+            },
+            drawCrossLine(){
+                switch (this.winningCombination.toString()) {
+                    case [0, 1, 2].toString(): return this.crossLine = {x1: 0, y1: 125, x2: 150, y2: 125};
+                    case [3, 4, 5].toString(): return this.crossLine = {x1: 0, y1: 75, x2: 150, y2: 75};
+                    case [6, 7, 8].toString(): return this.crossLine = {x1: 0, y1: 25, x2: 150, y2: 25};
+                    case [0, 3, 6].toString(): return this.crossLine = {x1: 25, y1: 0, x2: 25, y2: 150};
+                    case [1, 4, 7].toString(): return this.crossLine = {x1: 75, y1: 0, x2: 75, y2: 150};
+                    case [2, 5, 8].toString(): return this.crossLine = {x1: 125, y1: 0, x2: 125, y2: 150};
+                    case [0, 4, 8].toString(): return this.crossLine = {x1: 150, y1: 150, x2: 0, y2: 0};
+                    case [2, 4, 6].toString(): return this.crossLine = {x1: 0, y1: 150, x2: 150, y2: 0};
+                }
             }
         },
         created() {
@@ -201,6 +229,7 @@
         display: flex;
         flex-wrap: wrap;
         border: 1px solid #ccc;
+        position: relative;
     }
 
     .grid__item {
@@ -256,5 +285,13 @@
     .row_score {
         color: #fff;
         text-transform: uppercase;
+    }
+
+    .cross-line {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
     }
 </style>
