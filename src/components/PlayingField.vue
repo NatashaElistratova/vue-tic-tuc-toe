@@ -142,14 +142,21 @@
                     return combination.includes(i);
                 });
 
-                possibleCombinations.forEach(combination => {
-                    this.isWinner = combination.every((val, i, arr) => {
-                        return this.moves[val] === this.moves[arr[0]];
+                for(let combination of possibleCombinations){
+                    let markersArray = [];
+                    combination.forEach(item => {
+                        markersArray.push(this.moves[item]);
                     });
+
+                    this.isWinner = markersArray.every((el, i, arr) => {
+                        return el === arr[0];
+                    });
+
                     if (this.isWinner) {
                         this.winningCombination = combination;
+                        break;
                     }
-                });
+                }
 
                 if (this.isWinner) {
                     this.isWinner = true;
